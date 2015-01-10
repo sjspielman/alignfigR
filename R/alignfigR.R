@@ -23,31 +23,26 @@ plot_step <- 1
 #' @examples
 #' plot_frame <- read_alignment(file = "/path/to/sequences/data.fasta")
 #' @export
-read_alignment <- function(file = ""){
+read_alignment <- function(file){
                           
     raw_data <- readLines( file, warn = FALSE ) 
     seq_vector <- c()
     seq_name <- ""
-    if (tolower(format) == "fasta")
-    {
-        for (line in raw_data){
+    for (line in raw_data){
         
-            # New sequence record? Reset numbering
-            if ( grepl("^>", line) ){
-                seq_name <- sub("^>", "", line)
-                seq_vector[seq_name] <- ""     
-            }
-            else {
-                temp_seq <- gsub(" ","",line)
-                temp_seq <- gsub("\n","",temp_seq)
-                seq_vector[seq_name] <- paste( seq_vector[seq_name], temp_seq, sep="" )
-            }
+        # New sequence record? Reset numbering
+        if ( grepl("^>", line) ){
+            seq_name <- sub("^>", "", line)
+            seq_vector[seq_name] <- ""     
         }
-                          
+        else {
+            temp_seq <- gsub(" ","",line)
+            temp_seq <- gsub("\n","",temp_seq)
+            seq_vector[seq_name] <- paste( seq_vector[seq_name], temp_seq, sep="" )
+        }
+               
     }
-    else {
-        print("Currently, only fasta files are supported.")
-    }
+
  
     # Return sequence data parsed into named-array
     seq_vector 
