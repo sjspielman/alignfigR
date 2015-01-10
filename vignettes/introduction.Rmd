@@ -13,7 +13,7 @@ The package **alignfigR**, built around ggplot2, creates multiple sequence align
 
 ### Installation
 
-alignfigR can be install using the R library devtools (which you'll need to install first if you don't have it already):
+alignfigR can be installed using the R library devtools (which you'll need to install first if you don't have already):
 ```{r message=FALSE}
 library(devtools)
 devtools::install_github("sjspielman/alignfigR")
@@ -24,7 +24,7 @@ library(alignfigR)
 
 ### General usage
 
-First, use the function `read_alignment()` to load sequence data into R. Currently, only FASTA format is supported (but this will be extended soon!).
+First, use the function `read_alignment()` to load sequence data into R. Currently, only FASTA format is supported.
 ```{r message=FALSE}
 my_data <- read_alignment("../data/example.fasta")
 ```
@@ -65,7 +65,7 @@ p <- plot_alignment(my_data, my_favorite_colors)
 
 Here, we will use the default color scheme for a DNA alignment.
 
-```{r message=FALSE,  fig.height=2.5, fig.width=5.5}
+```{r basic_dna, message=FALSE,  fig.height=2.5, fig.width=5.5}
 p <- plot_alignment(my_data, "dna")
 p
 ```
@@ -73,7 +73,7 @@ p
 <br>
 
 As mentioned, you can manipulate this figure in any way you want, using ggplot2, from here on out. For instance, maybe a title!
-```{r tidy=TRUE, tidy.opts=list(width.cutoff=120), echo=TRUE, fig.height=2.5, fig.width=5.5}
+```{r titled_basic_dna, tidy=TRUE, tidy.opts=list(width.cutoff=120), echo=TRUE, fig.height=2.5, fig.width=5.5}
 library(ggplot2)
 p + ggtitle("My fancy-schmancy alignment figure!") 
 ```
@@ -89,7 +89,7 @@ By default, `plot_alignment()` will create a figure for your entire alignment. H
 <br>
 
 To restrict the plot to certain taxa, or to exclude certain taxa from the plot, use the arguments "taxon\_list" and "taxon\_action". Restrict the plot to only specified taxa with the argument taxon_action = "restrict".
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
+```{r dna_restrict_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "restrict")
 ```
 
@@ -97,22 +97,30 @@ plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "re
 
 You can alternatively exclude specified taxa from the plot with the argument taxon\_action = "exclude". Note that exclude is default behavior, so not specifying "taxon_action"" will similarly result in exclusion.
 
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
+```{r dna_exclude_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "exclude")
 ```
 
 <br>
 
 Columns can be similarly specified with the arguments "column\_list" and "column\_action". You can restrict the plot to show only specified columns with the argument column_action = "restrict".
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
+```{r dna_restrict_cols, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", column_list = c(1:25), column_action = "restrict")
 ```
 
 <br>
 
 You can exclude specified columns from the plot with the argument column_action = "exclude". Note that exclude is default behavior, so not specifying "column\_action" will similarly result in exclusion.
-```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
+```{r dna_exclude_cols, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", column_list = c(1:200), column_action = "exclude")
+```
+
+<br>
+
+And of course, we can also combine these options do get any alignment subset we want (with exciting colors, too)!
+```{r dna_colored_restrict_cols_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=100), fig.height=2.5, fig.width=5.5}
+exciting_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "cornsilk1", "T" = "mediumpurple1")
+plot_alignment(my_data, exciting_colors, column_list = c(552:581), column_action = "restrict", taxon_list = c("Cow", "Carp", "Chicken", "Human"), taxon_action = "restrict" )
 ```
 
 
