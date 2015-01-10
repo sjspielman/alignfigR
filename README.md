@@ -10,4 +10,5 @@ devtools::install_github("sjspielman/alignfigR")
 library(alignfigR)
 ```
 
-For usage instructions and examples, see the [alignfigR vignette](http://htmlpreview.github.io/?https://github.com/sjspielman/alignfigR/vignettes/introduction.html).
+For usage instructions and examples, see the [alignfigR vignette](http://htmlpreview.github.io/?https://github.com/sjspielman/alignfigR/blob/master/vignettes/introduction.html).
+
