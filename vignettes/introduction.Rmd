@@ -23,9 +23,8 @@ The package **alignfigR** creates multiple sequence alignment figures in R using
 alignfigR can be install using the R library devtools (which you'll need to install first if you don't have it already):
 ```{r message=FALSE}
 library(devtools)
-#devtools::install_github("sjspielman/alignfigR")
-#library(alignfigR)
-load_all("/Users/sjspielman/Research/alignfigR")
+devtools::install_github("sjspielman/alignfigR")
+library(alignfigR)
 ```
 
 ## General usage
@@ -33,7 +32,7 @@ load_all("/Users/sjspielman/Research/alignfigR")
 
 First, use the function **read_alignment** to load sequence data into R. Currently, only FASTA format is supported (but this will be extended soon!).
 ```{r echo=FALSE, message=FALSE}
-my_data <- read_alignment(file = "/Users/sjspielman/Research/alignfigR/data/example.fasta")
+my_data <- read_alignment(file = "example.fasta")
 ```
 <br>
 
