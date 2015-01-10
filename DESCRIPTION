@@ -1,0 +1,10 @@
+Package: alignfigR
+Title: Sequence alignment visualization using ggplot
+Version: 0.1
+Authors@R: "Stephanie J. Spielman <stephanie.spielman@gmail.com> [aut, cre]"
+Description: Visualize molecular sequence and/or alignment data as a colored grid.
+Depends: R (>= 3.1.1)
+Imports:
+    ggplot2 (>= 0.9.2)
+License: GPL-2
+LazyData: true
