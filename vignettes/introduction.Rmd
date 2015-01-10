@@ -1,24 +1,17 @@
----
-title: "Introduction to alignfigR"
-author: "Stephanie J. Spielman"
-date: "`r Sys.Date()`"
-output:
-  rmarkdown::html_vignette:
-    fig_width: 4
-    width_cutoff: 80
-vignette: >
-  %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
----
 ```{r global_options, include=FALSE}
 library(knitr)
 opts_chunk$set(fig.align="center", warning=FALSE, message=FALSE, idy.opts=list(width.cutoff=120))
 ```
 
-The package **alignfigR** creates multiple sequence alignment figures in R using ggplot2. Source code is freely available on github: [https://github.com/sjspielman/alignfigR](https://github.com/sjspielman/alignfigR). Importantly, the alignment plot that alignfigR returns to you is also a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
+# Introduction to alignfigR
 
-## Installation
+<br>
+
+The package **alignfigR**, built around ggplot2, creates multiple sequence alignment figures in R. Source code is freely available on github: [https://github.com/sjspielman/alignfigR](https://github.com/sjspielman/alignfigR). Importantly, the alignment plot that alignfigR returns to you is also a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
+
+<br>
+
+### Installation
 
 alignfigR can be install using the R library devtools (which you'll need to install first if you don't have it already):
 ```{r message=FALSE}
@@ -27,16 +20,18 @@ devtools::install_github("sjspielman/alignfigR")
 library(alignfigR)
 ```
 
-## General usage
-
-
-First, use the function **read_alignment** to load sequence data into R. Currently, only FASTA format is supported (but this will be extended soon!).
-```{r echo=FALSE, message=FALSE}
-my_data <- read_alignment(file = "example.fasta")
-```
 <br>
 
-Then, simply create an alignment figure with the function **plot_alignment**. This function takes two ordered arguments: 
+### General usage
+
+First, use the function `read_alignment()` to load sequence data into R. Currently, only FASTA format is supported (but this will be extended soon!).
+```{r message=FALSE}
+my_data <- read_alignment("../data/example.fasta")
+```
+
+<br>
+
+Then, simply create an alignment figure with the function `plot_alignment()`. This function takes two ordered arguments: 
 
 1. *alignment*, which corresponds to your sequence data set
 2. *palette*, which gives the color-mapping scheme scheme for your sequence data. Several options exist for this argument, as follows.
@@ -56,7 +51,9 @@ p <- plot_alignment(my_data)
 p <- plot_alignment(my_data, "random")
 
 ```
+
 <br>
+
 You can also specify your own color scheme using a named-array, as follows. Note that missing characters (such as gaps) can also be colored. This option is particularly useful for dealing with noncanonical data (e.g. binary or character data). However, word of caution! If any alignment chartacters are not assigned a color, such characters will be left as whitespace in the resulting plot. 
 ```r
 my_favorite_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "cornsilk1", "T" = "mediumpurple1",
@@ -68,12 +65,13 @@ p <- plot_alignment(my_data, my_favorite_colors)
 
 Here, we will use the default color scheme for a DNA alignment.
 
-```{r echo=TRUE, message=FALSE,  fig.height=2.5, fig.width=5.5}
+```{r message=FALSE,  fig.height=2.5, fig.width=5.5}
 p <- plot_alignment(my_data, "dna")
 p
 ```
 
 <br>
+
 As mentioned, you can manipulate this figure in any way you want, using ggplot2, from here on out. For instance, maybe a title!
 ```{r tidy=TRUE, tidy.opts=list(width.cutoff=120), echo=TRUE, fig.height=2.5, fig.width=5.5}
 library(ggplot2)
@@ -81,11 +79,14 @@ p + ggtitle("My fancy-schmancy alignment figure!")
 ```
 
 
+<br><br>
 
-## Plotting alignment subsets
+### Plotting alignment subsets
 
 
 By default, `plot_alignment()` will create a figure for your entire alignment. However, it is also possible to plot only a subset of your alignment, selecting particular taxa and/or columns. 
+
+<br>
 
 To restrict the plot to certain taxa, or to exclude certain taxa from the plot, use the arguments "taxon\_list" and "taxon\_action". Restrict the plot to only specified taxa with the argument taxon_action = "restrict".
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
@@ -93,14 +94,14 @@ plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "re
 ```
 
 <br>
+
 You can alternatively exclude specified taxa from the plot with the argument taxon\_action = "exclude". Note that exclude is default behavior, so not specifying "taxon_action"" will similarly result in exclusion.
 
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "exclude")
 ```
 
-
-
+<br>
 
 Columns can be similarly specified with the arguments "column\_list" and "column\_action". You can restrict the plot to show only specified columns with the argument column_action = "restrict".
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
@@ -108,6 +109,7 @@ plot_alignment(my_data, "dna", column_list = c(1:25), column_action = "restrict"
 ```
 
 <br>
+
 You can exclude specified columns from the plot with the argument column_action = "exclude". Note that exclude is default behavior, so not specifying "column\_action" will similarly result in exclusion.
 ```{r, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", column_list = c(1:200), column_action = "exclude")
