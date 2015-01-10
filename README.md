@@ -5,6 +5,7 @@ alignfigR will provide you with a ggplot object which you can further customize 
 
 To install and launch alignfigR, you'll need to make sure you have the devtools package. From an R console, enter the following,
 ```r
+library(devtools)
 devtools::install_github("sjspielman/alignfigR")
 library(alignfigR)
 ```
