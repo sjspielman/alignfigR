@@ -56,8 +56,8 @@ p <- plot_alignment(my_data, "random")
 
 You can also specify your own color scheme using a named-array, as follows. Note that missing characters (such as gaps) can also be colored. This option is particularly useful for dealing with noncanonical data (e.g. binary or character data). However, word of caution! If any alignment chartacters are not assigned a color, such characters will be left as whitespace in the resulting plot. 
 ```r
-my_favorite_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "cornsilk1", "T" = "mediumpurple1",
-                        "-" = "gray")
+my_favorite_colors <- c("A" = "pink", "C" = "magenta", "G" = "seagreen", "T" = "yellow",
+                        "-" = "black")
 p <- plot_alignment(my_data, my_favorite_colors)
 ```
 
@@ -88,39 +88,39 @@ By default, `plot_alignment()` will create a figure for your entire alignment. H
 
 <br>
 
-To restrict the plot to certain taxa, or to exclude certain taxa from the plot, use the arguments "taxon\_list" and "taxon\_action". Restrict the plot to only specified taxa with the argument taxon_action = "restrict".
+To restrict the plot to certain taxa, specify the taxa you'd like to keep with the argument "taxa".
 ```{r dna_restrict_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
-plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "restrict")
+plot_alignment(my_data, "dna", taxa = c("Cow", "Carp"))
+
 ```
 
 <br>
 
-You can alternatively exclude specified taxa from the plot with the argument taxon\_action = "exclude". Note that exclude is default behavior, so not specifying "taxon_action"" will similarly result in exclusion.
-
+You can alternatively exclude specified taxa from the plot by adding the argument `exclude_taxa = T`.
 ```{r dna_exclude_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
-plot_alignment(my_data, "dna", taxon_list = c("Cow", "Carp"), taxon_action = "exclude")
+plot_alignment(my_data, "dna", taxa = c("Cow", "Carp"), exclude_taxa = T)
 ```
 
 <br>
 
-Columns can be similarly specified with the arguments "column\_list" and "column\_action". You can restrict the plot to show only specified columns with the argument column_action = "restrict".
+Columns can be similarly specified with the argument "columns".
 ```{r dna_restrict_cols, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
-plot_alignment(my_data, "dna", column_list = c(1:25), column_action = "restrict")
+plot_alignment(my_data, "dna", columns = c(1:25))
 ```
 
 <br>
 
-You can exclude specified columns from the plot with the argument column_action = "exclude". Note that exclude is default behavior, so not specifying "column\_action" will similarly result in exclusion.
+And again, you can instead exclude specific columns by adding the argument `exclude_columns = T`.
 ```{r dna_exclude_cols, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
-plot_alignment(my_data, "dna", column_list = c(1:200), column_action = "exclude")
+plot_alignment(my_data, "dna", columns = c(1:200), exclude_columns = T)
 ```
 
 <br>
 
 And of course, we can also combine these options do get any alignment subset we want (with exciting colors, too)!
 ```{r dna_colored_restrict_cols_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=100), fig.height=2.5, fig.width=5.5}
-exciting_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "cornsilk1", "T" = "mediumpurple1")
-plot_alignment(my_data, exciting_colors, column_list = c(552:581), column_action = "restrict", taxon_list = c("Cow", "Carp", "Chicken", "Human"), taxon_action = "restrict" )
+exciting_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "mediumpurple1", "T" = "royalblue4", "-" = "cornsilk1")
+plot_alignment(my_data, exciting_colors, columns = c(1:200, 350:450), exclude_columns = T, taxa = c("Cow", "Carp", "Chicken", "Human") )
 ```
 
 
