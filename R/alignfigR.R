@@ -59,7 +59,7 @@ read_alignment <- function(file){
 #' Extract subset of sequence alignment
 #'
 #' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
-#' @param seqs        Sequence array
+#' @param seqs    Sequence array
 #' @param s       Step size for alignment block. Default, 1.
 #' @param tlist   List of taxa (the actual labels, not order) to either restrict to or exclude from plot.
 #' @param texl    Exclude those taxa?
@@ -71,7 +71,7 @@ read_alignment <- function(file){
 #' @export
 extract_subalign <- function(seqs, s, tlist, clist, texcl, cexcl)
 {
- 
+    
     # Initialize data frame with sequence information, coordinates for plotting  
     plot_frame <- data.frame( "x1"  = numeric(), 
                               "y1"  = numeric(),
@@ -81,9 +81,15 @@ extract_subalign <- function(seqs, s, tlist, clist, texcl, cexcl)
                               "seq"  = factor() )   
 
     # Remove or keep the columns via indexing
-    if (!(cexcl){
+    if (cexcl){
         clist <- clist * -1
     }
+    # Deal with tlist
+    if (length(tlist) == 0 && texcl == F)
+    {
+        tlist <- names(seqs)
+    }
+    
     seq_index <- 1
     
     # Decide which sequences to keep, and which columns to keep within each sequence
@@ -92,9 +98,8 @@ extract_subalign <- function(seqs, s, tlist, clist, texcl, cexcl)
         # Split the sequence for grabbing columns easily
         current_seq <- strsplit(seqs[seq_name], split="")[[1]]
 
-    
-        # Add sequence to plot_frame, if we want to keep it, selecting only desired columns
-        if ( (texcl && (seq_name %in% tlist)) ||  (texcl == F && !(seq_name %in% tlist)) ){
+        # KEEP these taxa, selecting only desired columns
+        if ( (texcl == FALSE && (seq_name %in% tlist)) ||  (texcl && !(seq_name %in% tlist)) ){
             if (length(clist) == 0)
             {  
                 retain_seq <- current_seq
@@ -219,19 +224,19 @@ define_palette <- function( inpalette, uniques )
 #' @param seq_vector        Sequence vector parsed using read_alignment
 #' @param palette           Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)
 #' @param taxon_list        Array of taxa (the actual labels, not order) to either restrict to or exclude from plot.
-#' @param taxon_exclude     Boolean argument indicating that taxa listed in taxon_list should be excluded from plot. Default: False
+#' @param exclude_taxon     Boolean argument indicating that taxa listed in taxon_list should be excluded from plot. Default: False
 #' @param column_list       Array of columns (indexed from 1) to either restrict to or exclude from plot.
-#' @param column_action     Boolean argument indicating that columns listed in column_list should be excluded from plot. Default: False
+#' @param exclude_column    Boolean argument indicating that columns listed in column_list should be excluded from plot. Default: False
 #' @return ggplot object which may be saved or edited as desired
 #' @examples
 #' align_plot <- plot_alignment(seq_vector, palette)
 #' align_plot <- plot_alignment(seq_vector, palette, taxon_list = c("i_hate_this_organism"), column_list = c(1:25) )
 #' align_plot <- plot_alignment(seq_vector, palette)
 #' @export
-plot_alignment <- function(seq_vector, palette = NA, step = 1, taxon_list = c(), column_list = c(), taxon_exclude = F, column_action = F)
+plot_alignment <- function(seq_vector, palette = NA, step = 1, taxon_list = c(), column_list = c(), exclude_taxon = F, exclude_column = F)
 {
     # Extract desired alignment subset
-    plot_frame <- extract_subalign(seq_vector, step, taxon_list, column_list, taxon_exclude, column_exclude)
+    plot_frame <- extract_subalign(seq_vector, step, taxon_list, column_list, exclude_taxon, exclude_column)
 
 
     # Determine alignment characters for palette construction
