@@ -4,20 +4,20 @@
 \alias{extract_subalign}
 \title{Extract subset of sequence alignment}
 \usage{
-extract_subalign(seqs, s, tlist, clist, taction, caction)
+extract_subalign(seqs, s, tlist, clist, texcl, cexcl)
 }
 \arguments{
 \item{seqs}{Sequence array}
 
-\item{s}{Step size for alignment block. Default, 20.}
+\item{s}{Step size for alignment block. Default, 1.}
 
 \item{tlist}{List of taxa (the actual labels, not order) to either restrict to or exclude from plot.}
 
 \item{clist}{List of columns (indexed from 1) to either restrict to or exclude from plot.}
 
-\item{taction}{"exclude" or "restrict". If "exclude", taxa given in taxon_list will not be plotted. If "restrict", *only* the taxa given in taxon_list will be plotted. DEFAULT: exclude.}
+\item{texl}{Exclude those taxa?}
 
-\item{caction}{"exclude" or "restrict". If "exclude", column given in column_list will not be plotted. If "restrict", *only* the column given in column_list will be plotted. DEFAULT: exclude.}
+\item{cexl}{Exclude those columns?}
 }
 \value{
 plot_frame, a data frame to be plotted

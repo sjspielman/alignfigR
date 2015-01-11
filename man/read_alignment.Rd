@@ -4,7 +4,7 @@
 \alias{read_alignment}
 \title{Read a multiple sequence alignment file.}
 \usage{
-read_alignment(file = "")
+read_alignment(file)
 }
 \arguments{
 \item{file}{File name. NOTE: Only FASTA file are supported!}

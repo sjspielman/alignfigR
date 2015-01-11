@@ -5,7 +5,7 @@
 \title{Plot a multiple sequence alignment}
 \usage{
 plot_alignment(seq_vector, palette = NA, step = 1, taxon_list = c(),
-  column_list = c(), taxon_action = "exclude", column_action = "exclude")
+  column_list = c(), exclude_taxon = F, exclude_column = F)
 }
 \arguments{
 \item{seq_vector}{Sequence vector parsed using read_alignment}
@@ -16,9 +16,9 @@ plot_alignment(seq_vector, palette = NA, step = 1, taxon_list = c(),
 
 \item{column_list}{Array of columns (indexed from 1) to either restrict to or exclude from plot.}
 
-\item{taxon_action}{"exclude" or "restrict". If "exclude", taxa given in taxon_list will not be plotted. If "restrict", *only* the taxa given in taxon_list will be plotted. DEFAULT: exclude.}
+\item{exclude_taxon}{Boolean argument indicating that taxa listed in taxon_list should be excluded from plot. Default: False}
 
-\item{column_action}{"exclude" or "restrict". If "exclude", column given in column_list will not be plotted. If "restrict", *only* the column given in column_list will be plotted. DEFAULT: exclude.}
+\item{exclude_column}{Boolean argument indicating that columns listed in column_list should be excluded from plot. Default: False}
 }
 \value{
 ggplot object which may be saved or edited as desired
