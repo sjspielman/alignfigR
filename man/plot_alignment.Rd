@@ -4,21 +4,21 @@
 \alias{plot_alignment}
 \title{Plot a multiple sequence alignment}
 \usage{
-plot_alignment(seq_vector, palette = NA, step = 1, taxon_list = c(),
-  column_list = c(), exclude_taxon = F, exclude_column = F)
+plot_alignment(seq_vector, palette = NA, step = 1, taxa = c(),
+  columns = c(), exclude_taxa = F, exclude_columns = F)
 }
 \arguments{
 \item{seq_vector}{Sequence vector parsed using read_alignment}
 
 \item{palette}{Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)}
 
-\item{taxon_list}{Array of taxa (the actual labels, not order) to either restrict to or exclude from plot.}
+\item{taxa}{Array of taxa (the actual labels, not order) to either restrict to or exclude from plot.}
 
-\item{column_list}{Array of columns (indexed from 1) to either restrict to or exclude from plot.}
+\item{columns}{Array of columns (indexed from 1) to either restrict to or exclude from plot.}
 
-\item{exclude_taxon}{Boolean argument indicating that taxa listed in taxon_list should be excluded from plot. Default: False}
+\item{exclude_taxa}{Boolean argument indicating that taxa listed in taxa should be excluded from plot. Default: False}
 
-\item{exclude_column}{Boolean argument indicating that columns listed in column_list should be excluded from plot. Default: False}
+\item{exclude_columns}{Boolean argument indicating that columns listed in columns should be excluded from plot. Default: False}
 }
 \value{
 ggplot object which may be saved or edited as desired
@@ -28,7 +28,7 @@ This function uses ggplot (in particular, w/ geom_rect) to plot a sequence align
 }
 \examples{
 align_plot <- plot_alignment(seq_vector, palette)
-align_plot <- plot_alignment(seq_vector, palette, taxon_list = c("i_hate_this_organism"), column_list = c(1:25) )
+align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism"), columns = c(1:25) )
 align_plot <- plot_alignment(seq_vector, palette)
 }
 
