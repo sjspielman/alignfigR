@@ -11,13 +11,13 @@ extract_subalign(seqs, s, tlist, clist, texcl, cexcl)
 
 \item{s}{Step size for alignment block. Default, 1.}
 
-\item{tlist}{List of taxa (the actual labels, not order) to either restrict to or exclude from plot.}
+\item{tlist}{List of taxa intended to restrict figure to or to exclude from figure.}
 
-\item{clist}{List of columns (indexed from 1) to either restrict to or exclude from plot.}
+\item{clist}{List of columns intended to restrict figure to or to exclude from figure.}
 
-\item{texl}{Exclude those taxa?}
+\item{texl}{Boolean indicating if taxa in tlist should be exluded.}
 
-\item{cexl}{Exclude those columns?}
+\item{cexl}{Boolean indicating if columns in clist should be exluded.}
 }
 \value{
 plot_frame, a data frame to be plotted

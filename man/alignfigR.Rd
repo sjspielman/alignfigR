@@ -6,7 +6,7 @@
 \alias{alignfigR-package}
 \title{alignfigR.}
 \description{
-Visualizing multiple sequence alignments with ggplot.
+Creating figures multiple sequence alignments with ggplot.
 CAUTION: no sanity checking is performed to check if your provided data is an alignment or just sequences (but they will plot either way :) )
 }
 

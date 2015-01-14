@@ -1,6 +1,6 @@
 #' alignfigR.
 #'
-#' Visualizing multiple sequence alignments with ggplot.
+#' Creating figures multiple sequence alignments with ggplot.
 #' CAUTION: no sanity checking is performed to check if your provided data is an alignment or just sequences (but they will plot either way :) )
 #' @name alignfigR
 #' @docType package
@@ -61,10 +61,10 @@ read_alignment <- function(file){
 #' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
 #' @param seqs    Sequence array
 #' @param s       Step size for alignment block. Default, 1.
-#' @param tlist   List of taxa (the actual labels, not order) to either restrict to or exclude from plot.
-#' @param texl    Exclude those taxa?
-#' @param clist   List of columns (indexed from 1) to either restrict to or exclude from plot.
-#' @param cexl    Exclude those columns?
+#' @param tlist   List of taxa intended to restrict figure to or to exclude from figure.
+#' @param texl    Boolean indicating if taxa in tlist should be exluded.
+#' @param clist   List of columns intended to restrict figure to or to exclude from figure.
+#' @param cexl    Boolean indicating if columns in clist should be exluded.
 #' @return plot_frame, a data frame to be plotted
 #' @examples
 #' GIVE EXAMPLES
@@ -92,8 +92,8 @@ extract_subalign <- function(seqs, s, tlist, clist, texcl, cexcl)
     
     seq_index <- 1
     
-    # Decide which sequences to keep, and which columns to keep within each sequence
-    for (seq_name in names(seqs)){
+    # Decide which sequences to keep, and which columns to keep within each sequence. Reverse seqs so figure is properly ordered.
+    for (seq_name in rev(names(seqs))){
         
         # Split the sequence for grabbing columns easily
         current_seq <- strsplit(seqs[seq_name], split="")[[1]]
@@ -221,17 +221,17 @@ define_palette <- function( inpalette, uniques )
 #' Plot a multiple sequence alignment
 #'
 #' This function uses ggplot (in particular, w/ geom_rect) to plot a sequence alignment
-#' @param seq_vector        Sequence vector parsed using read_alignment
-#' @param palette           Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)
-#' @param taxa        Array of taxa (the actual labels, not order) to either restrict to or exclude from plot.
-#' @param exclude_taxa     Boolean argument indicating that taxa listed in taxa should be excluded from plot. Default: False
-#' @param columns       Array of columns (indexed from 1) to either restrict to or exclude from plot.
-#' @param exclude_columns    Boolean argument indicating that columns listed in columns should be excluded from plot. Default: False
+#' @param seq_vector       Sequence vector parsed using read_alignment
+#' @param palette          Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)
+#' @param taxa             Array of taxa (the actual labels, not order) intended to restrict figure to or to exclude from figure.
+#' @param exclude_taxa     Boolean argument indicating that taxa should be excluded from plot. Default: False
+#' @param columns          Array of columns (indexed from 1) intended to restrict figure to or to exclude from figure.
+#' @param exclude_columns  Boolean argument indicating that columns should be excluded from plot. Default: False
 #' @return ggplot object which may be saved or edited as desired
 #' @examples
 #' align_plot <- plot_alignment(seq_vector, palette)
-#' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism"), columns = c(1:25) )
-#' align_plot <- plot_alignment(seq_vector, palette)
+#' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_love_this_organism", "i_love_this_one_too"), columns = c(1:25) )
+#' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism", exlude_taxa = T)
 #' @export
 plot_alignment <- function(seq_vector, palette = NA, step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
 {
@@ -242,7 +242,6 @@ plot_alignment <- function(seq_vector, palette = NA, step = 1, taxa = c(), colum
     # Determine alignment characters for palette construction
     unique_chars <- unique(plot_frame$seq)
     pal <- define_palette(palette, unique_chars)
-
 
     # Sort sequence columns so legend is alphabetical
     plot_frame$seq <- factor(plot_frame$seq, levels = sort(levels(plot_frame$seq)))
