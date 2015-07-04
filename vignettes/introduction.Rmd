@@ -7,19 +7,18 @@ opts_chunk$set(fig.align="center", warning=FALSE, message=FALSE, idy.opts=list(w
 
 <br>
 
-The package **alignfigR**, built around ggplot2, creates multiple sequence alignment figures in R. Source code is freely available on github: [https://github.com/sjspielman/alignfigR](https://github.com/sjspielman/alignfigR). Importantly, the alignment plot that alignfigR returns to you is also a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
+The package **alignfigR**, built around ggplot2, creates multiple sequence alignment figures in R. Source code is freely available on github: [https://github.com/sjspielman/alignfigR](https://github.com/sjspielman/alignfigR). In particular, alignfigR turns your sequence alignment into a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
 
 <br>
 
 ### Installation
 
 alignfigR can be installed using the R library devtools (which you'll need to install first if you don't have already):
-```{r message=FALSE}
-library(devtools)
+```{r}
+require(devtools)
 devtools::install_github("sjspielman/alignfigR")
-library(alignfigR)
+require(alignfigR)
 ```
-
 <br>
 
 ### General usage
@@ -38,18 +37,16 @@ Then, simply create an alignment figure with the function `plot_alignment()`. Th
 
 ```r
 # Default DNA colors
-p <- plot_alignment(my_data, "dna")
+plot_alignment(my_data, "dna")
 
 # Default RNA colors
-p <- plot_alignment(my_data, "dna")
+plot_alignment(my_data, "dna")
 
 # Default protein colors
-p <- plot_alignment(my_data, "protein")
+plot_alignment(my_data, "protein")
 
 # Random colors are the default. Either provide the argument "random", or simply provide nothing.
-p <- plot_alignment(my_data)
-p <- plot_alignment(my_data, "random")
-
+plot_alignment(my_data) # Or, this code:  plot_alignment(my_data, "random")
 ```
 
 <br>
