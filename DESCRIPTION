@@ -1,10 +1,17 @@
 Package: alignfigR
-Title: Sequence alignment visualization using ggplot
+Title: Multiple sequence alignment visualization
 Version: 0.1
-Authors@R: "Stephanie J. Spielman <stephanie.spielman@gmail.com> [aut, cre]"
-Description: Visualize molecular sequence and/or alignment data as a colored grid.
+Authors@R: c( person("Stephanie J.", "Spielman", role = c("aut", "cre"), email =
+    "stephanie.spielman@gmail.com") )
+Description: Visualize multiple sequence alignment data as a colored grid
 Depends: R (>= 3.1.1)
 Imports:
     ggplot2 (>= 0.9.2)
 License: GPL-2
 LazyData: true
+Suggests: knitr
+VignetteBuilder: knitr
+BugReports: https://github.com/sjspielman/alignfigR/issues
+Collate: 'alignfigR.R'
+NeedsCompilation: no
+Maintainer: Stephanie J Spielman <stephanie.spielman@gmail.com>
