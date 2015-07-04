@@ -1,7 +1,6 @@
 #' alignfigR.
 #'
 #' Creating figures multiple sequence alignments with ggplot.
-#' CAUTION: no sanity checking is performed to check if your provided data is an alignment or just sequences (but they will plot either way :) )
 #' @name alignfigR
 #' @docType package
 #' @import ggplot2
@@ -42,92 +41,15 @@ read_alignment <- function(file){
         }
                
     }
-
- 
-    # Return sequence data parsed into named-array
-    seq_vector 
+    # Is this an alignment?
+    seq_list <- strsplit(seq_vector, split = "")
+    lengths <- sapply(seq_list, length)
+    if ( sum(lengths != lengths[1]) != 0 )
+        stop("Your provided file is not an alignment. Please provide an alignment file in FASTA format to use alignfigR.")
+    
+    # Return sequence data parsed into named list
+    seq_list 
 }
-
-
-
-
-
-
-
-
-
-#' Extract subset of sequence alignment
-#'
-#' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
-#' @param seqs    Sequence array
-#' @param s       Step size for alignment block. Default, 1.
-#' @param tlist   List of taxa intended to restrict figure to or to exclude from figure.
-#' @param texl    Boolean indicating if taxa in tlist should be exluded.
-#' @param clist   List of columns intended to restrict figure to or to exclude from figure.
-#' @param cexl    Boolean indicating if columns in clist should be exluded.
-#' @return plot_frame, a data frame to be plotted
-#' @examples
-#' GIVE EXAMPLES
-#' @export
-extract_subalign <- function(seqs, s, tlist, clist, texcl, cexcl)
-{
-    
-    # Initialize data frame with sequence information, coordinates for plotting  
-    plot_frame <- data.frame( "x1"  = numeric(), 
-                              "y1"  = numeric(),
-                              "x2"  = numeric(),
-                              "y2"  = numeric(), 
-                              "name" = factor(), 
-                              "seq"  = factor() )   
-
-    # Remove or keep the columns via indexing
-    if (cexcl){
-        clist <- clist * -1
-    }
-    # Deal with tlist
-    if (length(tlist) == 0 && texcl == F)
-    {
-        tlist <- names(seqs)
-    }
-    
-    seq_index <- 1
-    
-    # Decide which sequences to keep, and which columns to keep within each sequence. Reverse seqs so figure is properly ordered.
-    for (seq_name in rev(names(seqs))){
-        
-        # Split the sequence for grabbing columns easily
-        current_seq <- strsplit(seqs[seq_name], split="")[[1]]
-
-        # KEEP these taxa, selecting only desired columns
-        if ( (texcl == FALSE && (seq_name %in% tlist)) ||  (texcl && !(seq_name %in% tlist)) ){
-            if (length(clist) == 0)
-            {  
-                retain_seq <- current_seq
-            }
-            else
-            {
-                retain_seq <- current_seq[clist]
-            }
-            pos_index <- 1
-            for ( pos in retain_seq ){
-                temp_frame <- data.frame( "x1" = pos_index, "y1" = seq_index, "x2" = pos_index + s, "y2" = seq_index + s, "name" = seq_name, "seq" = pos )
-                plot_frame <- rbind(plot_frame, temp_frame)
-                pos_index <- pos_index + 1
-            }
-            seq_index <- seq_index +  1 
-        }
-    }
-              
-    # Return data frame
-    plot_frame    
-}     
-
-
-
-
-
-
-
 
 
 
@@ -210,6 +132,69 @@ define_palette <- function( inpalette, uniques )
 
 
 
+#' Extract subset of sequence alignment
+#'
+#' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
+#' @param seqs    Sequence list, as parsed by the function `read_alignment`
+#' @param step    Step size for alignment block. Default, 1.
+#' @param tlist   Array of taxa intended to restrict figure to or to exclude from figure.
+#' @param clist   Array of columns intended to restrict figure to or to exclude from figure.
+#' @param texl    Boolean indicating if taxa in tlist should be exluded.
+#' @param cexl    Boolean indicating if columns in clist should be exluded.
+#' @return plot_frame, a data frame to be plotted
+#' @examples
+#' GIVE EXAMPLES
+#' @export
+extract_subalign <- function(seqs, step, tlist, clist, texcl, cexcl)
+{
+    
+    # Create subset of seqs containing only the desired taxa to plot
+    if (length(tlist) == 0){
+        sub_seqs_raw <- seqs
+        
+    }else if (texcl){
+        sub_seqs_raw <- seqs[!(names(seqs) %in% tlist)] # Exclude sequences in the provided list
+    }else
+    {
+        sub_seqs_raw <- seqs[tlist] 
+    }
+    
+    # Futher subset the sequences to contain only the desired columns
+    if (length(clist) == 0){
+        clist <- 1:length(sub_seqs_raw[[1]])        
+    }
+    if (cexcl){
+        sub_seqs <- lapply(sub_seqs_raw, `[`, (-1*clist))
+    }else
+    {
+        sub_seqs <- lapply(sub_seqs_raw, `[`)
+    }
+    
+    # Create the data frame to plot
+    sub_seqs <- rev(sub_seqs) # For proper plotting direction
+    each_length <- length(sub_seqs[[1]])
+    seqnames <- c(t(replicate(each_length, names(sub_seqs))))
+    seqletters <- unlist(sub_seqs)
+    y1 <- c(t(replicate(each_length, 1:length(sub_seqs))))
+    y2 <- y1 + step
+    x1 <- rep(1:each_length, length(sub_seqs))
+    x2 <- x1 + step
+    
+    plot_frame <- data.frame( "x1"  = x1, 
+                              "y1"  = y1, 
+                              "x2"  = x2, 
+                              "y2"  = y2, 
+                              "name" = seqnames, 
+                              "seq"  = seqletters) 
+    rownames(plot_frame) <- NULL
+    plot_frame
+}     
+
+
+
+
+
+
 
 
 
@@ -221,7 +206,7 @@ define_palette <- function( inpalette, uniques )
 #' Plot a multiple sequence alignment
 #'
 #' This function uses ggplot (in particular, w/ geom_rect) to plot a sequence alignment
-#' @param seq_vector       Sequence vector parsed using read_alignment
+#' @param seq_list         Sequence list parsed using the function `read_alignment`
 #' @param palette          Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)
 #' @param taxa             Array of taxa (the actual labels, not order) intended to restrict figure to or to exclude from figure.
 #' @param exclude_taxa     Boolean argument indicating that taxa should be excluded from plot. Default: False
@@ -233,10 +218,10 @@ define_palette <- function( inpalette, uniques )
 #' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_love_this_organism", "i_love_this_one_too"), columns = c(1:25) )
 #' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism", exlude_taxa = T)
 #' @export
-plot_alignment <- function(seq_vector, palette = NA, step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
+plot_alignment <- function(seq_list, palette = NA, step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
 {
     # Extract desired alignment subset
-    plot_frame <- extract_subalign(seq_vector, step, taxa, columns, exclude_taxa, exclude_columns)
+    plot_frame <- extract_subalign(seq_list, step, taxa, columns, exclude_taxa, exclude_columns)
 
 
     # Determine alignment characters for palette construction
