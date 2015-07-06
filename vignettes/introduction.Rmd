@@ -11,20 +11,11 @@ The package **alignfigR**, built around ggplot2, creates multiple sequence align
 
 <br>
 
-### Installation
-
-alignfigR can be installed using the R library devtools (which you'll need to install first if you don't have already):
-```{r}
-require(devtools)
-devtools::install_github("sjspielman/alignfigR")
-require(alignfigR)
-```
-<br>
-
 ### General usage
 
-First, use the function `read_alignment()` to load sequence data into R. Currently, only FASTA format is supported.
+As usual, load the library with either `require` or `library`. To input your alignment, use the function `read_alignment()`. Currently, only FASTA format is supported. The example file below contains DNA sequences, although any sequence alphabet (e.g. RNA and protein) is allowed.
 ```{r message=FALSE}
+require(alignfigR)
 my_data <- read_alignment("../data/example.fasta")
 ```
 
@@ -35,6 +26,7 @@ Then, simply create an alignment figure with the function `plot_alignment()`. Th
 1. *alignment*, which corresponds to your sequence data set
 2. *palette*, which gives the color-mapping scheme scheme for your sequence data. Several options exist for this argument, as follows.
 
+Here are some examples for using the default color schemes in `plot_alignment()`.
 ```r
 # Default DNA colors
 plot_alignment(my_data, "dna")
@@ -60,7 +52,7 @@ p <- plot_alignment(my_data, my_favorite_colors)
 
 <br>
 
-Here, we will use the default color scheme for a DNA alignment.
+Finally, let's use the default color scheme to plot this DNA alignment.
 
 ```{r basic_dna, message=FALSE,  fig.height=2.5, fig.width=5.5}
 p <- plot_alignment(my_data, "dna")
