@@ -9,7 +9,6 @@ NULL
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to alignfigR!")
 }
-plot_step <- 1
 
 
 
@@ -136,12 +135,12 @@ define_palette <- function( inpalette, uniques )
 #' Extract subset of sequence alignment
 #'
 #' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
-#' @param seqs    Sequence list, as parsed by the function `read_alignment`
-#' @param step    Step size for alignment block. Default, 1.
-#' @param tlist   Array of taxa intended to restrict figure to or to exclude from figure.
-#' @param clist   Array of columns intended to restrict figure to or to exclude from figure.
-#' @param texl    Boolean indicating if taxa in tlist should be exluded.
-#' @param cexl    Boolean indicating if columns in clist should be exluded.
+#' @param seqs       Sequence list, as parsed by the function `read_alignment`
+#' @param plot_step  Step size for alignment block. Default, 1.
+#' @param tlist      Array of taxa intended to restrict figure to or to exclude from figure.
+#' @param clist      Array of columns intended to restrict figure to or to exclude from figure.
+#' @param texl       Boolean indicating if taxa in tlist should be exluded.
+#' @param cexl       Boolean indicating if columns in clist should be exluded.
 #' @return plot_frame, a data frame to be plotted
 #' @examples
 #' extract_subalign(sequence_list)
@@ -149,7 +148,7 @@ define_palette <- function( inpalette, uniques )
 #' extract_subalign(sequence_list, clist = 1:25)
 #' palette <- define_palette("protein")
 #' @export
-extract_subalign <- function(seqs, step, tlist, clist, texcl, cexcl)
+extract_subalign <- function(seqs, plot_step, tlist, clist, texcl, cexcl)
 {
     
     # Create subset of seqs containing only the desired taxa to plot
@@ -180,9 +179,9 @@ extract_subalign <- function(seqs, step, tlist, clist, texcl, cexcl)
     seqnames <- c(t(replicate(each_length, names(sub_seqs))))
     seqletters <- unlist(sub_seqs)
     y1 <- c(t(replicate(each_length, 1:length(sub_seqs))))
-    y2 <- y1 + step
+    y2 <- y1 + plot_step
     x1 <- rep(1:each_length, length(sub_seqs))
-    x2 <- x1 + step
+    x2 <- x1 + plot_step
     
     plot_frame <- data.frame( "x1"  = x1, 
                               "y1"  = y1, 
@@ -222,10 +221,10 @@ extract_subalign <- function(seqs, step, tlist, clist, texcl, cexcl)
 #' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_love_this_organism", "i_love_this_one_too"), columns = c(1:25) )
 #' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism", exlude_taxa = T)
 #' @export
-plot_alignment <- function(seq_list, palette = NA, step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
+plot_alignment <- function(seq_list, palette = NA, plot_step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
 {
     # Extract desired alignment subset
-    plot_frame <- extract_subalign(seq_list, step, taxa, columns, exclude_taxa, exclude_columns)
+    plot_frame <- extract_subalign(seq_list, plot_step, taxa, columns, exclude_taxa, exclude_columns)
 
 
     # Determine alignment characters for palette construction
@@ -236,10 +235,9 @@ plot_alignment <- function(seq_list, palette = NA, step = 1, taxa = c(), columns
     plot_frame$seq <- factor(plot_frame$seq, levels = sort(levels(plot_frame$seq)))
         
     # Plot
-    theme_set(theme(legend.title = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank(), panel.background = element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.background = element_blank())
-    p <- ggplot() + geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) +
-         scale_fill_manual(values=pal)
-                   
+    theme_set(theme(legend.title = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank(), panel.background = element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.background = element_blank()))
+    p <- ggplot() + geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) + scale_fill_manual(values=pal)
+
     p
 }
 
