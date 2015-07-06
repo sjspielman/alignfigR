@@ -66,6 +66,7 @@ read_alignment <- function(file){
 #' @return Color palette named-array.
 #' @examples
 #' palette <- define_palette("DNA", c("A", "G", "T"))
+#' palette <- define_palette("protein")
 #' @export
 define_palette <- function( inpalette, uniques )
 {
@@ -143,7 +144,10 @@ define_palette <- function( inpalette, uniques )
 #' @param cexl    Boolean indicating if columns in clist should be exluded.
 #' @return plot_frame, a data frame to be plotted
 #' @examples
-#' GIVE EXAMPLES
+#' extract_subalign(sequence_list)
+#' extract_subalign(sequence_list, tlist = c("Cow", "Human", "Chicken"), texcl = T)
+#' extract_subalign(sequence_list, clist = 1:25)
+#' palette <- define_palette("protein")
 #' @export
 extract_subalign <- function(seqs, step, tlist, clist, texcl, cexcl)
 {
@@ -230,27 +234,12 @@ plot_alignment <- function(seq_list, palette = NA, step = 1, taxa = c(), columns
 
     # Sort sequence columns so legend is alphabetical
     plot_frame$seq <- factor(plot_frame$seq, levels = sort(levels(plot_frame$seq)))
-    
-    # Set axis breaks. CURRENTLY TURNED OFF.
-    #xbreaks <- calc_axis_breaks( max(plot_frame$x1) )
-    #ybreaks <- calc_axis_breaks( length(unique(plot_frame$name)) )
-    xbreaks <- c()
-    ybreaks <- c()
-    
+        
     # Plot
+    theme_set(theme(legend.title = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank(), panel.background = element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.background = element_blank())
     p <- ggplot() + geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) +
-         scale_fill_manual(values=pal)  + 
-         scale_x_continuous(breaks = xbreaks) + scale_y_continuous(breaks = ybreaks) + 
-         theme(
-            legend.title     = element_blank(),
-            axis.title.x     = element_blank(), 
-            axis.title.y     = element_blank(),
-            panel.background = element_blank(), 
-            panel.border     = element_blank(),
-            panel.grid.major = element_blank(),
-            panel.grid.minor = element_blank(),
-            plot.background  = element_blank())
-             
+         scale_fill_manual(values=pal)
+                   
     p
 }
 
@@ -261,61 +250,6 @@ plot_alignment <- function(seq_list, palette = NA, step = 1, taxa = c(), columns
 
 
 
-
-
-
-
-
-
-
-
-
-
-     
-            
-
-
-################ CURRENTLY NOT USED. ##################
-# Construct axis breaks for alignment plot
-#
-# Determine appropriate tick placement given the dataset size
-# @param size     Number of sequences OR length of alignment (or longest sequence) to plot
-# @return array axis break points
-# @examples
-# ybreaks <- calc_axis_breaks(number_sequences)
-# xbreaks <- calc_axis_breaks(alignment_length)
-# @export
-calc_axis_breaks <- function(size)
-{
-    if (size <= 10){
-        breaks <- c(seq(1,size), size)
-    }
-    else if (size > 10 & size <= 100){
-        breaks <- c(1, seq(10, size, 10))
-        if (size - breaks[length(breaks)] < 5){
-            breaks[length(breaks)] <- size
-        } 
-        else{
-            breaks <- c(breaks, size)
-        }
-    }
-    else {
-        breaks <- c(1, seq(50, size, 50))
-        if (size - breaks[length(breaks)] < 25){
-            breaks[length(breaks)] <- size
-        } 
-        else{
-            breaks <- c(breaks, size)
-        }
-    }
-    breaks <- sort(unique(breaks))
-    breaks
-    
-}
-
-
-                    
-  
 
 
 
