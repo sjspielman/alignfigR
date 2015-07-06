@@ -13,6 +13,8 @@ License: GPL-2
 LazyData: true
 Suggests: knitr
 VignetteBuilder: knitr
+URL: https://github.com/sjspielman/alignfigR
 BugReports: https://github.com/sjspielman/alignfigR/issues
+Repository: CRAN
 Collate: 'alignfigR.R'
 NeedsCompilation: no
