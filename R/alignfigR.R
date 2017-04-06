@@ -235,7 +235,7 @@ plot_alignment <- function(seq_list, palette = NA, plot_step = 1, taxa = c(), co
     plot_frame$seq <- factor(plot_frame$seq, levels = sort(levels(plot_frame$seq)))
         
     # Plot
-    theme_set(theme(legend.title = element_blank(), axis.title.x = element_blank(), axis.title.y = element_blank(), panel.background = element_blank(), panel.border = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), plot.background = element_blank()))
+    theme_set(theme_bw())
     p <- ggplot() + geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) + scale_fill_manual(values=pal)
 
     p
