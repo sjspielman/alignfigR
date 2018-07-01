@@ -1,16 +1,19 @@
 #' alignfigR.
 #'
-#' Creating figures multiple sequence alignments with ggplot.
+#' Creating figures multiple sequence alignments with ggplot2.
 #' @name alignfigR
 #' @docType package
 #' @import ggplot2
+#' @importFrom grDevices colors
 NULL
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to alignfigR!")
 }
 
-
+null_color           <- "grey85" ## Default missing and ambiguous
+y1 <- y2 <- x1 <- x2 <- NULL
+default_plot_step    <- 1
 
 
 #' Read a multiple sequence alignment file.
@@ -19,7 +22,8 @@ NULL
 #' @param file     File name. NOTE: Only FASTA file are supported!
 #' @return seq_array, a named-array of the parsed sequence data
 #' @examples
-#' plot_frame <- read_alignment(file = "/path/to/sequences/data.fasta")
+#' fasta_file <- system.file("extdata", "example.fasta", package = "alignfigR")
+#' plot_frame <- read_alignment(file = fasta_file)
 #' @export
 read_alignment <- function(file){
                           
@@ -70,7 +74,7 @@ read_alignment <- function(file){
 define_palette <- function( inpalette, uniques )
 {
     palette <- c()
-    ambigc <- "grey85"
+    ambigc <- null_color
     ambig <- c("?" = ambigc , "-" = ambigc, "*" = ambigc)
 
     # Random colors (also called if nothing specified)
@@ -79,7 +83,9 @@ define_palette <- function( inpalette, uniques )
         for (m in names(ambig)){
             uniques <- uniques[!uniques == m]
         }
-        palette <- sample( colors(), length(uniques) )
+        subcolors <- colors()[colors() != ambigc] ## Ensure null_color is not in the random scheme
+        palette <- sample( subcolors, length(uniques) )
+       
         names(palette) <- uniques
         
         palette <- c( palette, ambig )
@@ -107,7 +113,7 @@ define_palette <- function( inpalette, uniques )
         }
         
         # Missing color default
-        missing_color = "grey85"
+        missing_color <- null_color
         missing_palette <- rep(missing_color, length(missing_names))
         names(missing_palette) <- missing_names
         
@@ -136,21 +142,20 @@ define_palette <- function( inpalette, uniques )
 #'
 #' This function builds a data frame to plot an alignment from a specified subset of the full alignment.
 #' @param seqs       Sequence list, as parsed by the function `read_alignment`
-#' @param plot_step  Step size for alignment block. Default, 1.
+#' @param plot_step       Step size for alignment block. Default, 1.
 #' @param tlist      Array of taxa intended to restrict figure to or to exclude from figure.
 #' @param clist      Array of columns intended to restrict figure to or to exclude from figure.
-#' @param texl       Boolean indicating if taxa in tlist should be exluded.
-#' @param cexl       Boolean indicating if columns in clist should be exluded.
+#' @param texcl       Boolean indicating if taxa in tlist should be excluded. Default, False
+#' @param cexcl       Boolean indicating if columns in clist should be excluded. Default, False
 #' @return plot_frame, a data frame to be plotted
 #' @examples
-#' extract_subalign(sequence_list)
-#' extract_subalign(sequence_list, tlist = c("Cow", "Human", "Chicken"), texcl = T)
-#' extract_subalign(sequence_list, clist = 1:25)
-#' palette <- define_palette("protein")
+#' fasta_file <- system.file("extdata", "example.fasta", package = "alignfigR")
+#' plot_frame <- read_alignment(file = fasta_file)
+#' subset_seq_list <- extract_subalign(plot_frame, tlist = c("Cow", "Human", "Whale"), texcl = TRUE)
+#' subset_seq_list <- extract_subalign(plot_frame, clist = 1:25)
 #' @export
-extract_subalign <- function(seqs, plot_step, tlist, clist, texcl, cexcl)
+extract_subalign <- function(seqs, plot_step = 1, tlist = c(), clist = c(), texcl = FALSE, cexcl = FALSE)
 {
-    
     # Create subset of seqs containing only the desired taxa to plot
     if (length(tlist) == 0){
         sub_seqs_raw <- seqs
@@ -215,17 +220,21 @@ extract_subalign <- function(seqs, plot_step, tlist, clist, texcl, cexcl)
 #' @param exclude_taxa     Boolean argument indicating that taxa should be excluded from plot. Default: False
 #' @param columns          Array of columns (indexed from 1) intended to restrict figure to or to exclude from figure.
 #' @param exclude_columns  Boolean argument indicating that columns should be excluded from plot. Default: False
+#' @param legend_title     String determining title of legend. Default: "Character"
 #' @return ggplot object which may be saved or edited as desired
 #' @examples
-#' align_plot <- plot_alignment(seq_vector, palette)
-#' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_love_this_organism", "i_love_this_one_too"), columns = c(1:25) )
-#' align_plot <- plot_alignment(seq_vector, palette, taxa = c("i_hate_this_organism", exlude_taxa = T)
+#' fasta_file <- system.file("extdata", "example.fasta", package = "alignfigR")
+#' plot_frame <- read_alignment(file = fasta_file)
+#' align_plot <- plot_alignment(plot_frame, "DNA")
+#' align_plot <- plot_alignment(plot_frame, "protein")
+#' align_plot <- plot_alignment(plot_frame, taxa = c("Cow", "Whale"), columns = c(1:25))
+#' align_plot <- plot_alignment(plot_frame, taxa = c("Whale"), exclude_taxa = TRUE)
+#' align_plot <- plot_alignment(plot_frame, legend_title = "") ## Remove the title
 #' @export
-plot_alignment <- function(seq_list, palette = NA, plot_step = 1, taxa = c(), columns = c(), exclude_taxa = F, exclude_columns = F)
+plot_alignment <- function(seq_list, palette = NA, taxa = c(), columns = c(), exclude_taxa = FALSE, exclude_columns = FALSE, legend_title = "Character")
 {
     # Extract desired alignment subset
-    plot_frame <- extract_subalign(seq_list, plot_step, taxa, columns, exclude_taxa, exclude_columns)
-
+    plot_frame <- extract_subalign(seq_list, default_plot_step, taxa, columns, exclude_taxa, exclude_columns)
 
     # Determine alignment characters for palette construction
     unique_chars <- unique(plot_frame$seq)
@@ -235,9 +244,10 @@ plot_alignment <- function(seq_list, palette = NA, plot_step = 1, taxa = c(), co
     plot_frame$seq <- factor(plot_frame$seq, levels = sort(levels(plot_frame$seq)))
         
     # Plot
-    theme_set(theme_bw() + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank()))
-    p <- ggplot() + geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) + scale_fill_manual(values=pal)
-
+    theme_set(theme_bw() + theme(panel.grid.minor = element_blank(), panel.grid.major = element_blank(), panel.border = element_blank()))
+    p <- ggplot() + 
+        geom_rect(plot_frame, mapping=aes(xmin=x1-1, xmax=x2-1, ymin=y1-1, ymax=y2-1, fill = seq), linetype=0) + 
+        scale_fill_manual(values=pal, name = legend_title)
     p
 }
 

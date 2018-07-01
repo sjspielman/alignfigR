@@ -1,5 +1,12 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 ```{r global_options, include=FALSE}
 library(knitr)
+library(alignfigR)
+library(ggplot2)
 opts_chunk$set(fig.align="center", warning=FALSE, message=FALSE, idy.opts=list(width.cutoff=120))
 ```
 
@@ -16,7 +23,8 @@ The package **alignfigR**, built around ggplot2, creates multiple sequence align
 As usual, load the library with either `require` or `library`. To input your alignment, use the function `read_alignment()`. Currently, only FASTA format is supported. The example file below contains DNA sequences, although any sequence alphabet (e.g. RNA and protein) is allowed.
 ```{r message=FALSE}
 require(alignfigR)
-my_data <- read_alignment("../data/example.fasta")
+filename <- system.file("extdata", "example.fasta", package = "alignfigR")
+my_data <- read_alignment(filename)
 ```
 
 <br>
@@ -63,7 +71,6 @@ p
 
 As mentioned, you can manipulate this figure in any way you want, using ggplot2, from here on out. For instance, maybe a title!
 ```{r titled_basic_dna, tidy=TRUE, tidy.opts=list(width.cutoff=120), echo=TRUE, fig.height=2.5, fig.width=5.5}
-library(ggplot2)
 p + ggtitle("My fancy-schmancy alignment figure!") 
 ```
 
@@ -80,7 +87,6 @@ By default, `plot_alignment()` will create a figure for your entire alignment. H
 To restrict the plot to certain taxa, specify the taxa you'd like to keep with the argument "taxa".
 ```{r dna_restrict_taxa, tidy=TRUE, tidy.opts=list(width.cutoff=120), fig.height=2.5, fig.width=5.5}
 plot_alignment(my_data, "dna", taxa = c("Cow", "Carp"))
-
 ```
 
 <br>
