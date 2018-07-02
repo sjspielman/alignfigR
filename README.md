@@ -5,5 +5,5 @@ alignfigR will provide you with a ggplot object which you can further customize 
 
 For usage instructions and examples, see the [alignfigR vignette](http://htmlpreview.github.io/?https://github.com/sjspielman/alignfigR/blob/master/vignettes/introduction.html).
 
-Please direct all questions to [https://github.com/sjspielman/alignfigr/Issues](https://github.com/sjspielman/alignfigr/Issues).
+Please direct all questions to [https://github.com/sjspielman/alignfigr/issues](https://github.com/sjspielman/alignfigr/issues).
 
