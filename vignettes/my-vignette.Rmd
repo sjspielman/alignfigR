@@ -1,20 +1,32 @@
 ---
+title: "Introduction to alignfigR"
+author: "Stephanie J. Spielman"
+date: "`r Sys.Date()`"
 output:
-  html_document: default
-  pdf_document: default
+  - rmarkdown::html_vignette
+  - pdf_document
+vignette: >
+  %\VignetteIndexEntry{Introduction to alignfigR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\usepackage[utf8]{inputenc}
 ---
-```{r global_options, include=FALSE}
-library(knitr)
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align="center", 
+  warning=FALSE, 
+  message=FALSE, 
+  idy.opts=list(width.cutoff=120))
 library(alignfigR)
 library(ggplot2)
-opts_chunk$set(fig.align="center", warning=FALSE, message=FALSE, idy.opts=list(width.cutoff=120))
 ```
 
-# Introduction to alignfigR
 
 <br>
 
-The package **alignfigR**, built around ggplot2, creates multiple sequence alignment figures in R. Source code is freely available on github: [https://github.com/sjspielman/alignfigR](https://github.com/sjspielman/alignfigR). In particular, alignfigR turns your sequence alignment into a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
+The package **alignfigR**, built around ggplot2, creates multiple sequence alignment figures in R. In particular, alignfigR turns your sequence alignment into a ggplot object, which you can subsequently label, mark up, and save to your heart's content.
 
 <br>
 
@@ -117,10 +129,5 @@ And of course, we can also combine these options do get any alignment subset we 
 exciting_colors <- c("A" = "turquoise", "C" = "maroon", "G" = "mediumpurple1", "T" = "royalblue4", "-" = "cornsilk1")
 plot_alignment(my_data, exciting_colors, columns = c(1:200, 350:450), exclude_columns = T, taxa = c("Cow", "Carp", "Chicken", "Human") )
 ```
-
-
-
-
-
 
 
