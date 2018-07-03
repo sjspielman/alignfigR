@@ -1,6 +1,6 @@
 Package: alignfigR
 Title: Visualizing Multiple Sequence Alignments
-Version: 0.1
+Version: 0.1.1
 Description: This package is a convenient R package to visualize multiple sequence alignments as a colored grid, using ggplot2.
 Authors@R: c( person("Stephanie J.", "Spielman", role = c("aut", "cre"), email =
     "spielman@rowan.edu") )
