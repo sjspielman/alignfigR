@@ -5,7 +5,7 @@
 \title{Extract subset of sequence alignment}
 \usage{
 extract_subalign(seqs, plot_step = 1, tlist = c(), clist = c(),
-  texcl = FALSE, cexcl = FALSE)
+  texcl = FALSE, cexcl = FALSE, cincl = FALSE)
 }
 \arguments{
 \item{seqs}{Sequence list, as parsed by the function `read_alignment`}
@@ -19,6 +19,8 @@ extract_subalign(seqs, plot_step = 1, tlist = c(), clist = c(),
 \item{texcl}{Boolean indicating if taxa in tlist should be excluded. Default, False}
 
 \item{cexcl}{Boolean indicating if columns in clist should be excluded. Default, False}
+
+\item{cincl}{Boolean indicating if columns in clist should be included. Default, False}
 }
 \value{
 plot_frame, a data frame to be plotted
