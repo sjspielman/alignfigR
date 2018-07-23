@@ -4,22 +4,26 @@
 \alias{plot_alignment}
 \title{Plot a multiple sequence alignment}
 \usage{
-plot_alignment(seq_list, palette = NA, taxa = c(), columns = c(),
-  exclude_taxa = FALSE, exclude_columns = FALSE,
-  legend_title = "Character")
+plot_alignment(seq_list, palette = NA, taxa = c(), taxon_labels = FALSE,
+  columns = c(), exclude_taxa = FALSE, exclude_columns = FALSE,
+  include_columns = FALSE, legend_title = "Character")
 }
 \arguments{
 \item{seq_list}{Sequence list parsed using the function `read_alignment`}
 
 \item{palette}{Named-array mapping sequence to color or a pre-defined color scheme (random, rainbow, etc.)}
 
-\item{taxa}{Array of taxa (the actual labels, not order) intended to restrict figure to or to exclude from figure.}
+\item{taxa}{Array of taxa (the actual labels, not order) intended to restrict figure to or to exclude from figure}
+
+\item{taxon_labels}{Boolean argument indicating that the Y-axis should be labeled with taxon names. Default: False}
 
 \item{columns}{Array of columns (indexed from 1) intended to restrict figure to or to exclude from figure.}
 
 \item{exclude_taxa}{Boolean argument indicating that taxa should be excluded from plot. Default: False}
 
 \item{exclude_columns}{Boolean argument indicating that columns should be excluded from plot. Default: False}
+
+\item{include_columns}{Boolean argument indicating that columns should be included from plot. Default: False}
 
 \item{legend_title}{String determining title of legend. Default: "Character"}
 }
